@@ -20,7 +20,7 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="pushButtonConnect">
           <property name="enabled">
            <bool>true</bool>
           </property>
@@ -51,7 +51,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QComboBox" name="comboBox">
+           <widget class="QComboBox" name="comboBoxCOM">
             <item>
              <property name="text">
               <string>COM2</string>
@@ -141,7 +141,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QComboBox" name="comboBox_2">
+           <widget class="QComboBox" name="comboBoxSPEED">
             <item>
              <property name="text">
               <string>9600</string>
@@ -164,7 +164,7 @@
        </layout>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_2">
+       <widget class="QPushButton" name="pushButtonClear">
         <property name="text">
          <string>Очистить окно приема</string>
         </property>
@@ -180,15 +180,15 @@
      </widget>
     </item>
     <item>
-     <widget class="QTextBrowser" name="textBrowser"/>
+     <widget class="QTextBrowser" name="textBrowserRX"/>
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
-       <widget class="QLineEdit" name="lineEdit"/>
+       <widget class="QLineEdit" name="lineEditTX"/>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_3">
+       <widget class="QPushButton" name="pushButtonSend">
         <property name="text">
          <string>-&gt;</string>
         </property>
