@@ -6,6 +6,9 @@
 #include <QtSerialPort/QSerialPortInfo>
 #include <QMessageBox>
 
+#define Open true
+#define Closed false
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -25,8 +28,12 @@ private slots:
 
     void on_pushButtonConnect_clicked();
 
+    void sendMessage();
+
 private:
     Ui::MainWindow *ui;
     QSerialPort *serial;
+    bool portState = 0;//открыт или закрыт порт
+
 };
 #endif // MAINWINDOW_H
