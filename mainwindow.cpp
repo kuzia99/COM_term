@@ -37,7 +37,7 @@ void MainWindow::serialReceive()//получаем данные
 {
     QByteArray ba;//создаем пустой массив байт
     ba = serial->readAll();//читаем все
-    ui->textBrowserRX->append(ba);
+    ui->textBrowserRX->insertPlainText(ba);
 }
 
 
