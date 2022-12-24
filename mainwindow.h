@@ -5,6 +5,7 @@
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
 #include <QMessageBox>
+#include <QVector>
 #include "qcustomplot.h"
 
 #define Open true
@@ -35,7 +36,13 @@ private:
     Ui::MainWindow *ui;
     QSerialPort *serial;
     bool portState = 0;//открыт или закрыт порт
-    QCustomPlot* plot = nullptr;
+//    QCustomPlot* plot = nullptr;
+
+    void uiControlSetup();
+    void SerialPortSetup();
+
+    QVector<double> x,y;
+
 
 };
 #endif // MAINWINDOW_H

@@ -5,29 +5,26 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
+    uiControlSetup();
+    SerialPortSetup();
 
-    serial = new QSerialPort(this);
-
-    connect(serial, SIGNAL(readyRead()), this, SLOT(serialReceive()));//соединяем чтение-прием данных
-
-    /* получим список доступных в системе com портов при помощи QSerialPortInfo */
-    ui->comboBoxCOM->clear();
-    foreach(const QSerialPortInfo &info, QSerialPortInfo::availablePorts())
+    for(int i = 0; i < 200; ++i)
     {
-        QSerialPort port;
-        port.setPort(info);
-        if(port.open(QIODevice::ReadWrite))
-        {
-            qDebug() << "Название: " + info.portName() + " " + info.description() + info.manufacturer();
-
-            /* добавим порт в выпадающий списочек*/
-            ui->comboBoxCOM->addItem(port.portName());
-        }
+        x.push_back(i);
+        y.push_back(rand() & 150);
     }
-    /* свяжем сигналы кнопок отправки */
-    connect(ui->pushButtonSend,SIGNAL(clicked()), this, SLOT(sendMessage()));
-    connect(ui->lineEditTX, SIGNAL(editingFinished()), this, SLOT(sendMessage()));
+
+    ui->widget->xAxis->setRange(0,200);
+    ui->widget->yAxis->setRange(0, 155);
+
+    ui->widget->addGraph();
+    ui->widget->graph(0)->setData(x,y);
+
+    ui->widget->replot();
+//    ui->widget->setInteraction(QCP::iRangeZoom, true);
+//    ui->widget->setInteraction(QCP::iRangeDrag, true);
+
+
 }
 
 MainWindow::~MainWindow()
@@ -46,7 +43,29 @@ void MainWindow::serialReceive()//получаем данные
     ui->textBrowserRX->insertPlainText(ba);
 }
 
+void MainWindow::uiControlSetup()
+{
+    ui->setupUi(this);
+    /* свяжем сигналы кнопок отправки */
+    connect(ui->pushButtonSend,SIGNAL(clicked()), this, SLOT(sendMessage()));
+    connect(ui->lineEditTX, SIGNAL(editingFinished()), this, SLOT(sendMessage()));
+}
 
+void MainWindow::SerialPortSetup()
+{
+    serial = new QSerialPort(this);
+    connect(serial, SIGNAL(readyRead()), this, SLOT(serialReceive()));//соединяем чтение-прием данных
+
+    ui->comboBoxCOM->clear();/* получим список доступных в системе com портов при помощи QSerialPortInfo */
+    foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()) {
+        QSerialPort port;
+        port.setPort(info);
+        if (port.open(QIODevice::ReadWrite)) {
+            qDebug() << "Название: " + info.portName() + " " + info.description() + info.manufacturer();
+            ui->comboBoxCOM->addItem(port.portName());/* добавим порт в выпадающий списочек*/
+        }
+    }
+}
 
 
 void MainWindow::on_pushButtonClear_clicked()
