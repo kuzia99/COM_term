@@ -24,7 +24,15 @@ MainWindow::MainWindow(QWidget *parent)
 //    ui->widget->setInteraction(QCP::iRangeZoom, true);
 //    ui->widget->setInteraction(QCP::iRangeDrag, true);
 
+    updGraphTimer = new QTimer();
+    connect(updGraphTimer, SIGNAL(timeout()), this, SLOT(updateTimeTicks()));
+    updGraphTimer->start(10);
 
+
+
+    connect(ui->spinBox_y_lower, SIGNAL(valueChanged(int)), this, SLOT(updateGraph(int)));
+    connect(ui->spinBox_y_upper, SIGNAL(valueChanged(int)), this, SLOT(updateGraph(int)));
+    connect(ui->spinBox_time, SIGNAL(valueChanged(int)), this, SLOT(updateGraph(int)));
 }
 
 MainWindow::~MainWindow()
@@ -34,6 +42,25 @@ MainWindow::~MainWindow()
     //закрываем соединение при выходе
     serial->close();
     delete serial;
+    delete updGraphTimer;
+}
+
+void MainWindow::updateGraph(int)
+{
+    int timeInGraph = ui->spinBox_time->value();
+    ui->widget->xAxis->setRange(timeTicks - timeInGraph, timeTicks);
+    ui->widget->yAxis->setRange(ui->spinBox_y_lower->value(), ui->spinBox_y_upper->value());
+    ui->widget->replot();
+}
+
+void MainWindow::updateTimeTicks()
+{
+    timeTicks += 0.01;
+    updateGraph(0);
+}
+void MainWindow::addPoints()
+{
+
 }
 
 void MainWindow::serialReceive()//получаем данные
@@ -53,6 +80,7 @@ void MainWindow::uiControlSetup()
 
 void MainWindow::SerialPortSetup()
 {
+
     serial = new QSerialPort(this);
     connect(serial, SIGNAL(readyRead()), this, SLOT(serialReceive()));//соединяем чтение-прием данных
 

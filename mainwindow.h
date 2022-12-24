@@ -6,6 +6,7 @@
 #include <QtSerialPort/QSerialPortInfo>
 #include <QMessageBox>
 #include <QVector>
+#include <QTimer>
 #include "qcustomplot.h"
 
 #define Open true
@@ -23,6 +24,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void addPoints();
+
 private slots:
     void serialReceive();//получаем данные
 
@@ -31,6 +34,9 @@ private slots:
     void on_pushButtonConnect_clicked();
 
     void sendMessage();
+
+    void updateGraph(int);
+    void updateTimeTicks();
 
 private:
     Ui::MainWindow *ui;
@@ -42,6 +48,9 @@ private:
     void SerialPortSetup();
 
     QVector<double> x,y;
+
+    double timeTicks = 0.0;
+    QTimer *updGraphTimer = nullptr;
 
 
 };
