@@ -8,11 +8,11 @@ MainWindow::MainWindow(QWidget *parent)
     uiControlSetup();
     SerialPortSetup();
 
-    for(int i = 0; i < 200; ++i)
-    {
-        x.push_back(i);
-        y.push_back(rand() & 150);
-    }
+//    for(int i = 0; i < 200; ++i)
+//    {
+//        x.push_back(i);
+//        y.push_back(rand() & 150);
+//    }
 
     ui->widget->xAxis->setRange(0,200);
     ui->widget->yAxis->setRange(0, 155);
@@ -58,16 +58,42 @@ void MainWindow::updateTimeTicks()
     timeTicks += 0.01;
     updateGraph(0);
 }
-void MainWindow::addPoints()
-{
 
+void MainWindow::addPoints(double value)
+{
+    x.push_back(timeTicks);
+    y.push_back(value);
+
+    ui->widget->graph(0)->setData(x,y);
+    ui->widget->replot();
 }
 
 void MainWindow::serialReceive()//получаем данные
 {
+    if (serial->bytesAvailable() < 2)
+        return;
     QByteArray ba;//создаем пустой массив байт
-    ba = serial->readAll();//читаем все
+
+    ba = serial->readLine(4096);//читаем все
     ui->textBrowserRX->insertPlainText(ba);
+    QScrollBar * sb = ui->textBrowserRX->verticalScrollBar();
+    sb->setValue(sb-> maximum());
+
+
+    QString inputMessage = QString(ba);
+
+    if (inputMessage.contains("Temperature "))
+    {
+        inputMessage.remove("Temperature ");
+
+        QByteArray val = inputMessage.toLocal8Bit();
+
+        addPoints(strtod (val, nullptr)); // добавим точку на график
+    }
+    else
+    {
+        qDebug() << inputMessage;
+    }
 }
 
 void MainWindow::uiControlSetup()
@@ -113,10 +139,10 @@ void MainWindow::on_pushButtonConnect_clicked()
         /* открываем порт */
         serial->setPortName(ui->comboBoxCOM->currentText());
         serial->setBaudRate(ui->comboBoxSPEED->currentText().toInt());
-        serial->setDataBits(QSerialPort::Data8);
-        serial->setParity(QSerialPort::NoParity);
-        serial->setStopBits(QSerialPort::OneStop);
-        serial->setFlowControl(QSerialPort::NoFlowControl);
+//        serial->setDataBits(QSerialPort::Data8);
+//        serial->setParity(QSerialPort::NoParity);
+//        serial->setStopBits(QSerialPort::OneStop);
+//        serial->setFlowControl(QSerialPort::NoFlowControl);
         serial->open(QIODevice::ReadWrite);//открыли порт
 
         portState = Open;

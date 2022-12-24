@@ -24,7 +24,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void addPoints();
+    void addPoints(double value);
 
 private slots:
     void serialReceive();//получаем данные
