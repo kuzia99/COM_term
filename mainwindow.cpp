@@ -17,8 +17,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->widget->xAxis->setRange(0,200);
     ui->widget->yAxis->setRange(0, 155);
 
+
+    ui->widget->xAxis->setLabel("Time, s");
     ui->widget->addGraph();
     ui->widget->graph(0)->setData(x,y);
+    ui->widget->graph(0)->setBrush(QBrush(QColor(0, 0, 255, 20))); // first graph will be filled with translucent blue
 
     ui->widget->replot();
 //    ui->widget->setInteraction(QCP::iRangeZoom, true);
