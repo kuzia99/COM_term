@@ -8,20 +8,12 @@ MainWindow::MainWindow(QWidget *parent)
     uiControlSetup();
     SerialPortSetup();
 
-//    for(int i = 0; i < 200; ++i)
-//    {
-//        x.push_back(i);
-//        y.push_back(rand() & 150);
-//    }
-
-    ui->widget->xAxis->setRange(0,200);
-    ui->widget->yAxis->setRange(0, 155);
-
-
+    ui->widget->yAxis->setRange(0, 100);
     ui->widget->xAxis->setLabel("Time, s");
     ui->widget->addGraph();
     ui->widget->graph(0)->setData(x,y);
-    ui->widget->graph(0)->setBrush(QBrush(QColor(0, 0, 255, 20))); // first graph will be filled with translucent blue
+    ui->widget->graph(0)->setPen(QPen(QColor(0, 0, 0), 3));
+    ui->widget->graph(0)->setBrush(QBrush(QColor(0, 0, 255, 95))); // first graph will be filled with translucent blue
 
     ui->widget->replot();
 //    ui->widget->setInteraction(QCP::iRangeZoom, true);
@@ -78,25 +70,35 @@ void MainWindow::serialReceive()//получаем данные
     QByteArray ba;//создаем пустой массив байт
 
     ba = serial->readLine(4096);//читаем все
-    ui->textBrowserRX->insertPlainText(ba);
+
+    QString in;
+    for (int i = 0; i < ba.size(); ++i) {
+        in += QString::number(ba.at(i), 16) + " ";
+    }
+    qDebug() << in + "\r\n";
+
+    ui->textBrowserRX->insertPlainText(in);
     QScrollBar * sb = ui->textBrowserRX->verticalScrollBar();
     sb->setValue(sb-> maximum());
 
+    double readedVal = DataManager->getParamValue(ba);
+    if( readedVal > 1.0 && readedVal < 1000.0)
+        addPoints(readedVal);
+    QTimer::singleShot(ui->spinBoxResponseTime->value(), this, SLOT(sendRequest()));
+//    QString inputMessage = QString(ba);
 
-    QString inputMessage = QString(ba);
+//    if (inputMessage.contains("Temperature "))
+//    {
+//        inputMessage.remove("Temperature ");
 
-    if (inputMessage.contains("Temperature "))
-    {
-        inputMessage.remove("Temperature ");
+//        QByteArray val = inputMessage.toLocal8Bit();
 
-        QByteArray val = inputMessage.toLocal8Bit();
-
-        addPoints(strtod (val, nullptr)); // добавим точку на график
-    }
-    else
-    {
-        qDebug() << inputMessage;
-    }
+//        addPoints(strtod (val, nullptr)); // добавим точку на график
+//    }
+//    else
+//    {
+//        qDebug() << inputMessage;
+//    }
 }
 
 void MainWindow::uiControlSetup()
@@ -122,6 +124,9 @@ void MainWindow::SerialPortSetup()
             ui->comboBoxCOM->addItem(port.portName());/* добавим порт в выпадающий списочек*/
         }
     }
+
+    DataManager = new DataManager_t();
+    SerialResponseTimer = new QTimer();
 }
 
 
@@ -179,6 +184,18 @@ void MainWindow::on_pushButtonConnect_clicked()
 
 }
 
+void MainWindow::sendPacket(QByteArray packet)
+{
+    QString out;
+    for (int i = 0; i < packet.length(); ++i) {
+        out += QString::number(packet.at(i), 16) + " ";
+    }
+    qDebug() << out;
+
+    serial->write(packet);
+}
+
+
 void MainWindow::sendMessage()
 {
     QByteArray packet;
@@ -188,3 +205,21 @@ void MainWindow::sendMessage()
     /* очистим виджет ввода */
     ui->lineEditTX->clear();
 }
+
+void MainWindow::on_checkBox_clicked(bool checked)
+{
+    if (checked)
+    {
+         QTimer::singleShot(ui->spinBoxResponseTime->value(), this, SLOT(sendRequest()));
+
+//        SerialResponseTimer->start(ui->spinBoxResponseTime->value());
+//        connect(SerialResponseTimer, SIGNAL(timeout()), this, SLOT(sendRequest()));
+    }
+}
+
+void MainWindow::sendRequest()
+{
+//    SerialResponseTimer->stop();// останавливаем таймер
+    sendPacket(DataManager->AskPacket(ui->spinBoxId->value(), ui->spinBoxParameter->value())); // пора отправлять запрос
+}
+

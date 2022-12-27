@@ -8,6 +8,7 @@
 #include <QVector>
 #include <QTimer>
 #include "qcustomplot.h"
+#include "datamanager_t.h"
 
 #define Open true
 #define Closed false
@@ -26,18 +27,22 @@ public:
 
     void addPoints(double value);
 
+    void sendPacket(QByteArray packet);
+
 private slots:
     void serialReceive();//получаем данные
 
     void on_pushButtonClear_clicked();
 
     void on_pushButtonConnect_clicked();
-
     void sendMessage();
 
     void updateGraph(int);
     void updateTimeTicks();
 
+    void on_checkBox_clicked(bool checked);
+
+    void sendRequest();
 private:
     Ui::MainWindow *ui;
     QSerialPort *serial;
@@ -51,7 +56,8 @@ private:
 
     double timeTicks = 0.0;
     QTimer *updGraphTimer = nullptr;
-
+    DataManager_t* DataManager = nullptr;
+    QTimer *SerialResponseTimer = nullptr;
 
 };
 #endif // MAINWINDOW_H
