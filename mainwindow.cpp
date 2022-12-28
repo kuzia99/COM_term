@@ -44,6 +44,8 @@ void MainWindow::PlotSetup()
     ui->widget->xAxis->grid()->setPen(QPen(QColor(0, 0, 0), 1));
     ui->widget->xAxis->grid()->setSubGridPen(QPen(QColor(0, 0, 0), 1));
     ui->widget->xAxis->grid()->setSubGridVisible(true);
+    ui->widget->xAxis->grid()->setAntialiasedSubGrid(true);
+    ui->widget->xAxis->grid()->setAntialiased(true);
     ui->widget->yAxis->grid()->setPen(QPen(QColor(0, 0, 0), 1));
     ui->widget->yAxis->grid()->setSubGridVisible(true);
     ui->widget->yAxis->grid()->setSubGridPen(QPen(QColor(0, 0, 0), 1));
@@ -106,6 +108,7 @@ void MainWindow::serialReceive()//получаем данные
 
     double readedVal = DataManager->getParamValue(serialData);
     addPoints(readedVal);
+    ui->labelCurrentValue->setText(QString::number(readedVal));
 
     QTimer::singleShot(ui->spinBoxResponseTime->value(), this, SLOT(sendRequest()));
 }
