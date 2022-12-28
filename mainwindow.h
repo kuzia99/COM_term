@@ -46,11 +46,16 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QSerialPort *serial;
-    bool portState = 0;//открыт или закрыт порт
 //    QCustomPlot* plot = nullptr;
 
     void uiControlSetup();
     void SerialPortSetup();
+    void PlotSetup();
+    void StartUpdateGraphTimer();
+    void ConnectControlButton();
+    void PrintInputMessage();
+    void UpdateCOMList();
+    void SetPortSettings();
 
     QVector<double> x,y;
 
@@ -59,5 +64,7 @@ private:
     DataManager_t* DataManager = nullptr;
     QTimer *SerialResponseTimer = nullptr;
 
+    QByteArray serialData;
+    QString serialText;
 };
 #endif // MAINWINDOW_H
