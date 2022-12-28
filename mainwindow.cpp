@@ -41,6 +41,12 @@ void MainWindow::PlotSetup()
     ui->widget->graph(0)->setPen(QPen(QColor(0, 0, 0), 3));
     ui->widget->graph(0)->setBrush(QBrush(QColor(0, 0, 255, 95))); // first graph will be filled with translucent blue
 
+    ui->widget->xAxis->grid()->setPen(QPen(QColor(0, 0, 0), 1));
+    ui->widget->xAxis->grid()->setSubGridPen(QPen(QColor(0, 0, 0), 1));
+    ui->widget->xAxis->grid()->setSubGridVisible(true);
+    ui->widget->yAxis->grid()->setPen(QPen(QColor(0, 0, 0), 1));
+    ui->widget->yAxis->grid()->setSubGridVisible(true);
+    ui->widget->yAxis->grid()->setSubGridPen(QPen(QColor(0, 0, 0), 1));
     ui->widget->replot();
 //    ui->widget->setInteraction(QCP::iRangeZoom, true);
 //    ui->widget->setInteraction(QCP::iRangeDrag, true);
