@@ -1,5 +1,4 @@
 #include "datamanager_t.h"
-#include "mainwindow.h"
 
 DataManager_t::DataManager_t()
 {

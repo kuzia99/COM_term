@@ -1,5 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "paramlistitem.h"
+
+#include <QList>
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -36,6 +40,7 @@ void MainWindow::PlotSetup()
 {
     ui->widget->yAxis->setRange(0, 100);
     ui->widget->xAxis->setLabel("Time, s");
+    ui->widget->addGraph();
     ui->widget->addGraph();
     ui->widget->graph(0)->setData(x,y);
     ui->widget->graph(0)->setPen(QPen(QColor(0, 0, 0), 3));
@@ -206,5 +211,26 @@ void MainWindow::sendRequest()
     if (ui->checkBox->checkState()) {
         sendPacket(DataManager->AskPacket(ui->spinBoxId->value(), ui->spinBoxParameter->value())); // пора отправлять запрос
     }
+}
+
+
+void MainWindow::on_pushButton_clicked()
+{
+    QListWidgetItem *item = new QListWidgetItem;
+    ParamListItem *paramItem = new ParamListItem;
+    ui->listWidget->addItem(item);
+    ui->listWidget->setItemWidget(item, paramItem);
+//    item->setSizeHint(QSize(0,70));
+}
+
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    QList<QListWidgetItem*> items = ui->listWidget->selectedItems();
+    foreach (QListWidgetItem* item, items) {
+        ui->listWidget->removeItemWidget(item);
+        delete item;
+    }
+
 }
 

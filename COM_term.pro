@@ -12,11 +12,13 @@ SOURCES += \
     datamanager_t.cpp \
     main.cpp \
     mainwindow.cpp \
+    paramlistitem.cpp \
     qcustomplot.cpp
 
 HEADERS += \
     datamanager_t.h \
     mainwindow.h \
+    paramlistitem.h \
     qcustomplot.h
 
 FORMS += \
