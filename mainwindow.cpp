@@ -115,9 +115,10 @@ void MainWindow::serialReceive()//получаем данные
 
     double readedVal = DataManager->getParamValue(serialData);
     addPoints(readedVal);
-    ui->labelCurrentValue->setText(QString::number(readedVal));
+    ((QLabel*)(ui->tableWidget->cellWidget(0, 4)))->setText(QString::number(readedVal));
+//    ui->labelCurrentValue->setText(QString::number(readedVal));
 
-    QTimer::singleShot(ui->spinBoxResponseTime->value(), this, SLOT(sendRequest()));
+    QTimer::singleShot(ui->spinBoxResponseTime->value(), this, SLOT(sendNextRequest()));
 }
 
 void MainWindow::PrintInputMessage()
@@ -200,9 +201,7 @@ void MainWindow::CreateTable()
     ui->tableWidget->setHorizontalHeaderLabels(headers);
 
     ui->tableWidget->setRowCount(ui->tableWidget->rowCount());
-
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-
     CreateItemTable(ui->tableWidget->rowCount());// метод добавления нового элемента в таблицу
 }
 
@@ -213,6 +212,11 @@ void MainWindow::CreateItemTable(int row)
     QCheckBox *checkBoxEnabled = new QCheckBox();
     checkBoxEnabled->setStyleSheet("margin-left:10%; margin-right:90%;");
     ui->tableWidget->setCellWidget(row, 0, checkBoxEnabled);
+
+
+    connect(checkBoxEnabled, SIGNAL(clicked(bool)), this, SLOT(sendRequest(bool)));
+
+
 
     QSpinBox *spinBoxId = new QSpinBox();
     spinBoxId->setValue(0);
@@ -252,10 +256,14 @@ void MainWindow::on_checkBox_clicked(bool checked)
     }
 }
 
-void MainWindow::sendRequest()
+void MainWindow::sendRequest(bool)
 {
-    if (ui->checkBox->checkState()) {
-        sendPacket(DataManager->AskPacket(ui->spinBoxId->value(), ui->spinBoxParameter->value())); // пора отправлять запрос
+    QCheckBox *checkBox = static_cast<QCheckBox*>(ui->tableWidget->cellWidget(0,0));
+    QSpinBox *spinBoxId = static_cast<QSpinBox*>(ui->tableWidget->cellWidget(0,1));
+    QSpinBox *spinBoxParam = static_cast<QSpinBox*>(ui->tableWidget->cellWidget(0,2));
+
+    if (checkBox->checkState()) {
+        sendPacket(DataManager->AskPacket(spinBoxId->value(), spinBoxParam->value())); // пора отправлять запрос
     }
 }
 
@@ -286,5 +294,10 @@ void MainWindow::changeColor()
     button->setAutoFillBackground(true);
     button->setPalette(pal);
     button->update();
+}
+
+void MainWindow::sendNextRequest()
+{
+    sendRequest(true);
 }
 

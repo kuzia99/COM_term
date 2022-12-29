@@ -37,10 +37,11 @@ private slots:
     void updateGraph(int);
     void updateTimeTicks();
     void on_checkBox_clicked(bool checked);
-    void sendRequest();
+    void sendRequest(bool);
     void on_pushButton_clicked();
     void on_pushButton_2_clicked();
     void changeColor();
+    void sendNextRequest();
 
 private:
     Ui::MainWindow *ui;
