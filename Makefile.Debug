@@ -3176,18 +3176,7 @@ debug/mainwindow.o: mainwindow.cpp mainwindow.h \
 		datamanager_t.h \
 		D:/Qt/6.5.0/mingw_64/include/QtCore/QByteArray \
 		ui_mainwindow.h \
-		D:/Qt/6.5.0/mingw_64/include/QtWidgets/QApplication \
-		D:/Qt/6.5.0/mingw_64/include/QtWidgets/QCheckBox \
-		D:/Qt/6.5.0/mingw_64/include/QtWidgets/QComboBox \
-		D:/Qt/6.5.0/mingw_64/include/QtWidgets/QHBoxLayout \
-		D:/Qt/6.5.0/mingw_64/include/QtWidgets/QLabel \
-		D:/Qt/6.5.0/mingw_64/include/QtWidgets/QLineEdit \
-		D:/Qt/6.5.0/mingw_64/include/QtWidgets/QMenuBar \
-		D:/Qt/6.5.0/mingw_64/include/QtWidgets/QPushButton \
-		D:/Qt/6.5.0/mingw_64/include/QtWidgets/QSpinBox \
-		D:/Qt/6.5.0/mingw_64/include/QtWidgets/QStatusBar \
-		D:/Qt/6.5.0/mingw_64/include/QtWidgets/QTextBrowser \
-		D:/Qt/6.5.0/mingw_64/include/QtWidgets/QVBoxLayout
+		D:/Qt/6.5.0/mingw_64/include/QtWidgets/QColorDialog
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug/mainwindow.o mainwindow.cpp
 
 debug/paramlistitem.o: paramlistitem.cpp paramlistitem.h \
@@ -3351,7 +3340,16 @@ debug/paramlistitem.o: paramlistitem.cpp paramlistitem.h \
 		D:/Qt/6.5.0/mingw_64/include/QtWidgets/qlabel.h \
 		D:/Qt/6.5.0/mingw_64/include/QtWidgets/qframe.h \
 		D:/Qt/6.5.0/mingw_64/include/QtGui/qpicture.h \
-		D:/Qt/6.5.0/mingw_64/include/QtGui/qtextdocument.h
+		D:/Qt/6.5.0/mingw_64/include/QtGui/qtextdocument.h \
+		D:/Qt/6.5.0/mingw_64/include/QtWidgets/QSpinBox \
+		D:/Qt/6.5.0/mingw_64/include/QtWidgets/qspinbox.h \
+		D:/Qt/6.5.0/mingw_64/include/QtWidgets/qabstractspinbox.h \
+		D:/Qt/6.5.0/mingw_64/include/QtGui/qvalidator.h \
+		D:/Qt/6.5.0/mingw_64/include/QtCore/qregularexpression.h \
+		D:/Qt/6.5.0/mingw_64/include/QtCore/qlocale.h \
+		D:/Qt/6.5.0/mingw_64/include/QtWidgets/QCheckBox \
+		D:/Qt/6.5.0/mingw_64/include/QtWidgets/qcheckbox.h \
+		D:/Qt/6.5.0/mingw_64/include/QtWidgets/qabstractbutton.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug/paramlistitem.o paramlistitem.cpp
 
 debug/qcustomplot.o: qcustomplot.cpp qcustomplot.h \

@@ -1,8 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "paramlistitem.h"
+//#include "paramlistitem.h"
 
 #include <QList>
+#include <QColorDialog>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -14,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     PlotSetup();
     StartUpdateGraphTimer();
     ConnectControlButton();
+    CreateTable();
 }
 
 /// Методы инициализации
@@ -155,7 +157,6 @@ void MainWindow::SetPortSettings()
 //        serial->setFlowControl(QSerialPort::NoFlowControl);
 }
 
-
 void MainWindow::on_pushButtonClear_clicked()
 {
     ui->textBrowserRX->clear();
@@ -189,6 +190,52 @@ void MainWindow::sendPacket(QByteArray packet)
     serial->write(packet);
 }
 
+void MainWindow::CreateTable()
+{
+    ui->tableWidget->setColumnCount(5);// Указываем число колонок
+    ui->tableWidget->setShowGrid(true);// включаем отображение сетки
+    ui->tableWidget->setSelectionMode(QAbstractItemView::SingleSelection);// Разрешаем выделение только одного элемента
+    ui->tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);// Разрешаем выделение построчно
+    QStringList headers = { "Опрос", "ID", "Параметр", "Цвет","Значение"};
+    ui->tableWidget->setHorizontalHeaderLabels(headers);
+
+    ui->tableWidget->setRowCount(ui->tableWidget->rowCount());
+
+    ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+    CreateItemTable(ui->tableWidget->rowCount());// метод добавления нового элемента в таблицу
+}
+
+void MainWindow::CreateItemTable(int row)
+{
+    ui->tableWidget->insertRow(row);
+
+    QCheckBox *checkBoxEnabled = new QCheckBox();
+    checkBoxEnabled->setStyleSheet("margin-left:10%; margin-right:90%;");
+    ui->tableWidget->setCellWidget(row, 0, checkBoxEnabled);
+
+    QSpinBox *spinBoxId = new QSpinBox();
+    spinBoxId->setValue(0);
+    ui->tableWidget->setCellWidget(row, 1, spinBoxId);
+
+    QSpinBox *spinBoxParameter = new QSpinBox();
+    spinBoxParameter->setValue(0);
+    ui->tableWidget->setCellWidget(row, 2, spinBoxParameter);
+
+    QPushButton *pushButtonColor = new QPushButton();//тип тут лежит кнопка для редактирования цвета
+    ui->tableWidget->setCellWidget(row, 3, pushButtonColor);
+
+    QPalette pal = pushButtonColor->palette();
+    pal.setColor(QPalette::Button, QColor(Qt::blue));
+    pushButtonColor->setAutoFillBackground(true);
+    pushButtonColor->setPalette(pal);
+    pushButtonColor->update();
+
+    connect(pushButtonColor, &QPushButton::released, this, &MainWindow::changeColor);
+    QLabel *labelValue = new QLabel();
+    ui->tableWidget->setCellWidget(row, 4, labelValue);
+}
+
 
 void MainWindow::sendMessage()
 {
@@ -200,8 +247,7 @@ void MainWindow::sendMessage()
 
 void MainWindow::on_checkBox_clicked(bool checked)
 {
-    if (checked)
-    {
+    if (checked) {
          QTimer::singleShot(ui->spinBoxResponseTime->value(), this, SLOT(sendRequest()));
     }
 }
@@ -214,23 +260,31 @@ void MainWindow::sendRequest()
 }
 
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_pushButton_clicked()// добавить новый элемент в таблицу
 {
-    QListWidgetItem *item = new QListWidgetItem;
-    ParamListItem *paramItem = new ParamListItem;
-    ui->listWidget->addItem(item);
-    ui->listWidget->setItemWidget(item, paramItem);
-//    item->setSizeHint(QSize(0,70));
+    ui->tableWidget->setRowCount(ui->tableWidget->rowCount());
+    CreateItemTable(ui->tableWidget->rowCount());// метод добавления нового элемента в таблицу
 }
 
 
-void MainWindow::on_pushButton_2_clicked()
+void MainWindow::on_pushButton_2_clicked()//удалить текущий элемент из таблицы
 {
-    QList<QListWidgetItem*> items = ui->listWidget->selectedItems();
-    foreach (QListWidgetItem* item, items) {
-        ui->listWidget->removeItemWidget(item);
-        delete item;
+    QModelIndexList selectedRows = ui->tableWidget->selectionModel()->selectedRows();
+    if (selectedRows.size()) {
+        ui->tableWidget->removeRow(selectedRows[0].row());
     }
+}
 
+void MainWindow::changeColor()
+{
+    QColor color = QColorDialog::getColor(Qt::blue, this);
+
+    QPushButton *button = static_cast<QPushButton*>(QObject::sender());
+
+    QPalette pal = button->palette();
+    pal.setColor(QPalette::Button, color);
+    button->setAutoFillBackground(true);
+    button->setPalette(pal);
+    button->update();
 }
 

@@ -24,28 +24,23 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
     void addPoints(double value);
-
     void sendPacket(QByteArray packet);
+    void CreateTable();
+    void CreateItemTable(int i);
 
 private slots:
     void serialReceive();//получаем данные
-
     void on_pushButtonClear_clicked();
-
     void on_pushButtonConnect_clicked();
     void sendMessage();
-
     void updateGraph(int);
     void updateTimeTicks();
-
     void on_checkBox_clicked(bool checked);
-
     void sendRequest();
     void on_pushButton_clicked();
-
     void on_pushButton_2_clicked();
+    void changeColor();
 
 private:
     Ui::MainWindow *ui;
