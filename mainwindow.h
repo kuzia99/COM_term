@@ -55,6 +55,7 @@ private:
     void PrintInputMessage();
     void UpdateCOMList();
     void SetPortSettings();
+    void IncrementParamCounter();
 
     QVector<double> x,y;
 
@@ -65,5 +66,6 @@ private:
 
     QByteArray serialData;
     QString serialText;
+    int CurrentParam = 0;
 };
 #endif // MAINWINDOW_H

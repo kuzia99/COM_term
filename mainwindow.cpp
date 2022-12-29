@@ -43,10 +43,9 @@ void MainWindow::PlotSetup()
     ui->widget->yAxis->setRange(0, 100);
     ui->widget->xAxis->setLabel("Time, s");
     ui->widget->addGraph();
-    ui->widget->addGraph();
     ui->widget->graph(0)->setData(x,y);
     ui->widget->graph(0)->setPen(QPen(QColor(0, 0, 0), 3));
-    ui->widget->graph(0)->setBrush(QBrush(QColor(0, 0, 255, 95))); // first graph will be filled with translucent blue
+//    ui->widget->graph(0)->setBrush(QBrush(QColor(0, 0, 255, 95))); // first graph will be filled with translucent blue
 
     ui->widget->xAxis->grid()->setPen(QPen(QColor(0, 0, 0), 1));
     ui->widget->xAxis->grid()->setSubGridPen(QPen(QColor(0, 0, 0), 1));
@@ -101,7 +100,8 @@ void MainWindow::addPoints(double value)
     x.push_back(timeTicks);
     y.push_back(value);
 
-    ui->widget->graph(0)->addData(timeTicks, value);
+    ui->widget->graph(CurrentParam)->addData(timeTicks, value);
+//    ui->widget->graph(0)->addData(timeTicks, value);
 //    ui->widget->graph(0)->setData(x,y);
 }
 
@@ -115,9 +115,10 @@ void MainWindow::serialReceive()//получаем данные
 
     double readedVal = DataManager->getParamValue(serialData);
     addPoints(readedVal);
-    ((QLabel*)(ui->tableWidget->cellWidget(0, 4)))->setText(QString::number(readedVal));
+    ((QLabel*)(ui->tableWidget->cellWidget(CurrentParam, 4)))->setText(QString::number(readedVal));
 //    ui->labelCurrentValue->setText(QString::number(readedVal));
 
+    IncrementParamCounter();
     QTimer::singleShot(ui->spinBoxResponseTime->value(), this, SLOT(sendNextRequest()));
 }
 
@@ -155,7 +156,15 @@ void MainWindow::SetPortSettings()
 //        serial->setDataBits(QSerialPort::Data8);
 //        serial->setParity(QSerialPort::NoParity);
 //        serial->setStopBits(QSerialPort::OneStop);
-//        serial->setFlowControl(QSerialPort::NoFlowControl);
+    //        serial->setFlowControl(QSerialPort::NoFlowControl);
+}
+
+void MainWindow::IncrementParamCounter()
+{
+    ++CurrentParam;
+    if (CurrentParam >= ui->tableWidget->rowCount()) {
+        CurrentParam = 0;
+    }
 }
 
 void MainWindow::on_pushButtonClear_clicked()
@@ -258,9 +267,9 @@ void MainWindow::on_checkBox_clicked(bool checked)
 
 void MainWindow::sendRequest(bool)
 {
-    QCheckBox *checkBox = static_cast<QCheckBox*>(ui->tableWidget->cellWidget(0,0));
-    QSpinBox *spinBoxId = static_cast<QSpinBox*>(ui->tableWidget->cellWidget(0,1));
-    QSpinBox *spinBoxParam = static_cast<QSpinBox*>(ui->tableWidget->cellWidget(0,2));
+    QCheckBox *checkBox = static_cast<QCheckBox*>(ui->tableWidget->cellWidget(CurrentParam, 0));
+    QSpinBox *spinBoxId = static_cast<QSpinBox*>(ui->tableWidget->cellWidget(CurrentParam,1));
+    QSpinBox *spinBoxParam = static_cast<QSpinBox*>(ui->tableWidget->cellWidget(CurrentParam,2));
 
     if (checkBox->checkState()) {
         sendPacket(DataManager->AskPacket(spinBoxId->value(), spinBoxParam->value())); // пора отправлять запрос
@@ -272,6 +281,7 @@ void MainWindow::on_pushButton_clicked()// добавить новый элем�
 {
     ui->tableWidget->setRowCount(ui->tableWidget->rowCount());
     CreateItemTable(ui->tableWidget->rowCount());// метод добавления нового элемента в таблицу
+    ui->widget->addGraph();//добавим новый график
 }
 
 
