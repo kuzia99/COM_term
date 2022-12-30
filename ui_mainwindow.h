@@ -51,6 +51,9 @@ public:
     QHBoxLayout *horizontalLayout_2;
     QLineEdit *lineEditTX;
     QPushButton *pushButtonSend;
+    QHBoxLayout *horizontalLayoutColors;
+    QPushButton *pushButton_4;
+    QPushButton *pushButton_3;
     QVBoxLayout *verticalLayout_7;
     QHBoxLayout *horizontalLayout_5;
     QLabel *scale_label;
@@ -95,8 +98,13 @@ public:
         pushButtonConnect = new QPushButton(centralwidget);
         pushButtonConnect->setObjectName("pushButtonConnect");
         pushButtonConnect->setEnabled(true);
-        pushButtonConnect->setMinimumSize(QSize(70, 56));
-        pushButtonConnect->setMaximumSize(QSize(128, 56));
+        QSizePolicy sizePolicy1(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(pushButtonConnect->sizePolicy().hasHeightForWidth());
+        pushButtonConnect->setSizePolicy(sizePolicy1);
+        pushButtonConnect->setMinimumSize(QSize(150, 56));
+        pushButtonConnect->setMaximumSize(QSize(200, 56));
 
         horizontalLayout->addWidget(pushButtonConnect);
 
@@ -104,9 +112,6 @@ public:
         verticalLayout->setObjectName("verticalLayout");
         label = new QLabel(centralwidget);
         label->setObjectName("label");
-        QSizePolicy sizePolicy1(QSizePolicy::Fixed, QSizePolicy::Fixed);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
         sizePolicy1.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
         label->setSizePolicy(sizePolicy1);
 
@@ -116,7 +121,8 @@ public:
         comboBoxCOM->setObjectName("comboBoxCOM");
         sizePolicy1.setHeightForWidth(comboBoxCOM->sizePolicy().hasHeightForWidth());
         comboBoxCOM->setSizePolicy(sizePolicy1);
-        comboBoxCOM->setMinimumSize(QSize(120, 10));
+        comboBoxCOM->setMinimumSize(QSize(50, 10));
+        comboBoxCOM->setMaximumSize(QSize(80, 16777215));
 
         verticalLayout->addWidget(comboBoxCOM);
 
@@ -173,6 +179,7 @@ public:
 
         textBrowserRX = new QTextBrowser(centralwidget);
         textBrowserRX->setObjectName("textBrowserRX");
+        textBrowserRX->setEnabled(true);
         QSizePolicy sizePolicy2(QSizePolicy::Fixed, QSizePolicy::Expanding);
         sizePolicy2.setHorizontalStretch(0);
         sizePolicy2.setVerticalStretch(0);
@@ -203,6 +210,21 @@ public:
 
 
         verticalLayout_4->addLayout(horizontalLayout_2);
+
+        horizontalLayoutColors = new QHBoxLayout();
+        horizontalLayoutColors->setObjectName("horizontalLayoutColors");
+        pushButton_4 = new QPushButton(centralwidget);
+        pushButton_4->setObjectName("pushButton_4");
+
+        horizontalLayoutColors->addWidget(pushButton_4);
+
+        pushButton_3 = new QPushButton(centralwidget);
+        pushButton_3->setObjectName("pushButton_3");
+
+        horizontalLayoutColors->addWidget(pushButton_3);
+
+
+        verticalLayout_4->addLayout(horizontalLayoutColors);
 
 
         horizontalLayout_3->addLayout(verticalLayout_4);
@@ -289,13 +311,10 @@ public:
 
         tableWidget = new QTableWidget(centralwidget);
         tableWidget->setObjectName("tableWidget");
-        QSizePolicy sizePolicy6(QSizePolicy::Preferred, QSizePolicy::Fixed);
-        sizePolicy6.setHorizontalStretch(0);
-        sizePolicy6.setVerticalStretch(0);
-        sizePolicy6.setHeightForWidth(tableWidget->sizePolicy().hasHeightForWidth());
-        tableWidget->setSizePolicy(sizePolicy6);
+        sizePolicy.setHeightForWidth(tableWidget->sizePolicy().hasHeightForWidth());
+        tableWidget->setSizePolicy(sizePolicy);
         tableWidget->setMinimumSize(QSize(0, 50));
-        tableWidget->setMaximumSize(QSize(200000, 80));
+        tableWidget->setMaximumSize(QSize(200000, 110));
 
         verticalLayout_7->addWidget(tableWidget);
 
@@ -321,6 +340,9 @@ public:
 
         pushButton = new QPushButton(centralwidget);
         pushButton->setObjectName("pushButton");
+        QSizePolicy sizePolicy6(QSizePolicy::Preferred, QSizePolicy::Fixed);
+        sizePolicy6.setHorizontalStretch(0);
+        sizePolicy6.setVerticalStretch(0);
         sizePolicy6.setHeightForWidth(pushButton->sizePolicy().hasHeightForWidth());
         pushButton->setSizePolicy(sizePolicy6);
         pushButton->setMinimumSize(QSize(0, 0));
@@ -365,6 +387,8 @@ public:
         pushButtonClear->setText(QCoreApplication::translate("MainWindow", "\320\236\321\207\320\270\321\201\321\202\320\270\321\202\321\214 \320\276\320\272\320\275\320\276 \320\277\321\200\320\270\320\265\320\274\320\260", nullptr));
         label_3->setText(QCoreApplication::translate("MainWindow", "\320\236\320\272\320\275\320\276 \320\262\321\213\320\262\320\276\320\264\320\260:", nullptr));
         pushButtonSend->setText(QCoreApplication::translate("MainWindow", "->", nullptr));
+        pushButton_4->setText(QCoreApplication::translate("MainWindow", "\320\241\320\262\320\265\321\202\320\273\320\276", nullptr));
+        pushButton_3->setText(QCoreApplication::translate("MainWindow", "\320\242\320\265\320\274\320\275\320\276", nullptr));
         scale_label->setText(QCoreApplication::translate("MainWindow", "Y \321\210\320\272\320\260\320\273\320\260. \320\276\321\202", nullptr));
         label_4->setText(QCoreApplication::translate("MainWindow", "\320\264\320\276", nullptr));
         label_5->setText(QCoreApplication::translate("MainWindow", "\320\222\321\200\320\265\320\274\321\217 \320\275\320\260 \320\263\321\200\320\260\321\204\320\270\320\272\320\265, \321\201:", nullptr));

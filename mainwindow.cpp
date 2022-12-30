@@ -44,17 +44,21 @@ void MainWindow::PlotSetup()
     ui->widget->xAxis->setLabel("Time, s");
     ui->widget->addGraph();
     ui->widget->graph(0)->setData(x,y);
-    ui->widget->graph(0)->setPen(QPen(QColor(0, 0, 0), 3));
+    ui->widget->graph(0)->setPen(QPen(QColor(Qt::blue), 3));
 //    ui->widget->graph(0)->setBrush(QBrush(QColor(0, 0, 255, 95))); // first graph will be filled with translucent blue
 
-    ui->widget->xAxis->grid()->setPen(QPen(QColor(0, 0, 0), 1));
-    ui->widget->xAxis->grid()->setSubGridPen(QPen(QColor(0, 0, 0), 1));
-    ui->widget->xAxis->grid()->setSubGridVisible(true);
-    ui->widget->xAxis->grid()->setAntialiasedSubGrid(true);
-    ui->widget->xAxis->grid()->setAntialiased(true);
-    ui->widget->yAxis->grid()->setPen(QPen(QColor(0, 0, 0), 1));
-    ui->widget->yAxis->grid()->setSubGridVisible(true);
-    ui->widget->yAxis->grid()->setSubGridPen(QPen(QColor(0, 0, 0), 1));
+//    ui->widget->xAxis->grid()->setPen(QPen(QColor(0, 0, 0), 1));
+////    ui->widget->xAxis->grid()->setSubGridPen(QPen(QColor(0, 0, 0), 1));
+////    ui->widget->xAxis->grid()->setSubGridVisible(true);
+////    ui->widget->xAxis->grid()->setAntialiasedSubGrid(true);
+////    ui->widget->xAxis->grid()->setAntialiased(true);
+//    ui->widget->yAxis->grid()->setPen(QPen(QColor(0, 0, 0), 1));
+//    ui->widget->yAxis->grid()->setSubGridVisible(true);
+//    ui->widget->yAxis->grid()->setSubGridPen(QPen(QColor(0, 0, 0), 1));
+
+    SetPlotTheme(QColor(Qt::black));
+
+
     ui->widget->replot();
 //    ui->widget->setInteraction(QCP::iRangeZoom, true);
 //    ui->widget->setInteraction(QCP::iRangeDrag, true);
@@ -131,8 +135,8 @@ void MainWindow::PrintInputMessage()
     qDebug() << serialText + "\r\n";
 
     ui->textBrowserRX->insertPlainText("<< " + serialText + "\r\n");
-    QScrollBar * sb = ui->textBrowserRX->verticalScrollBar();
-    sb->setValue(sb-> maximum());
+//    QScrollBar * sb = ui->textBrowserRX->verticalScrollBar();
+//    sb->setValue(sb-> maximum());
 }
 
 void MainWindow::UpdateCOMList()
@@ -165,6 +169,30 @@ void MainWindow::IncrementParamCounter()
     if (CurrentParam >= ui->tableWidget->rowCount()) {
         CurrentParam = 0;
     }
+}
+
+void MainWindow::SetPlotTheme(QColor color)
+{
+    ui->widget->xAxis->grid()->setVisible(false);
+
+
+    ui->widget->xAxis->grid()->setPen(QPen(color, 1));
+    ui->widget->xAxis->grid()->setSubGridVisible(false);
+
+    ui->widget->yAxis->grid()->setPen(QPen(color, 1));
+    ui->widget->yAxis->grid()->setSubGridVisible(false);
+
+    ui->widget->xAxis->setBasePen(QPen(color, 1));
+    ui->widget->xAxis->setTickPen(QPen(color, 1));
+
+    ui->widget->yAxis->setBasePen(QPen(color, 1));
+    ui->widget->yAxis->setTickPen(QPen(color, 1));
+
+    ui->widget->xAxis->setTickLabelColor(color);
+    ui->widget->xAxis->setLabelColor(color);
+
+    ui->widget->yAxis->setTickLabelColor(color);
+    ui->widget->yAxis->setLabelColor(color);
 }
 
 void MainWindow::on_pushButtonClear_clicked()
@@ -222,10 +250,7 @@ void MainWindow::CreateItemTable(int row)
     checkBoxEnabled->setStyleSheet("margin-left:10%; margin-right:90%;");
     ui->tableWidget->setCellWidget(row, 0, checkBoxEnabled);
 
-
     connect(checkBoxEnabled, SIGNAL(clicked(bool)), this, SLOT(sendRequest(bool)));
-
-
 
     QSpinBox *spinBoxId = new QSpinBox();
     spinBoxId->setValue(0);
@@ -233,6 +258,7 @@ void MainWindow::CreateItemTable(int row)
 
     QSpinBox *spinBoxParameter = new QSpinBox();
     spinBoxParameter->setValue(0);
+    spinBoxParameter->setMaximum(65535);
     ui->tableWidget->setCellWidget(row, 2, spinBoxParameter);
 
     QPushButton *pushButtonColor = new QPushButton();//тип тут лежит кнопка для редактирования цвета
@@ -304,10 +330,49 @@ void MainWindow::changeColor()
     button->setAutoFillBackground(true);
     button->setPalette(pal);
     button->update();
+
+    int row = ui->tableWidget->currentRow();//нужно узнать строку виджета в таблице
+    ui->widget->graph(row)->setPen(QPen(color, 3));
 }
 
 void MainWindow::sendNextRequest()
 {
     sendRequest(true);
+}
+
+
+void MainWindow::on_pushButton_4_clicked()//включить светлую тему
+{
+    qApp->setPalette(style()->standardPalette());    // Для возврата к светлой палитре достаточно будет установить стандартную палитру из темы оформления
+    ui->widget->setBackground(QBrush(QColor(255, 255, 255)));//нужно перекрасить график в светлый
+    SetPlotTheme(QColor(Qt::black));
+}
+
+
+void MainWindow::on_pushButton_3_clicked()//включить темную тему
+{
+    QPalette darkPalette;// Создаём палитру для тёмной темы оформления
+
+    // Настраиваем палитру для цветовых ролей элементов интерфейса
+    darkPalette.setColor(QPalette::Window, QColor(53, 53, 53));
+    darkPalette.setColor(QPalette::WindowText, Qt::white);
+    darkPalette.setColor(QPalette::Base, QColor(25, 25, 25));
+    darkPalette.setColor(QPalette::AlternateBase, QColor(53, 53, 53));
+    darkPalette.setColor(QPalette::ToolTipBase, Qt::white);
+    darkPalette.setColor(QPalette::ToolTipText, Qt::white);
+    darkPalette.setColor(QPalette::Text, Qt::white);
+    darkPalette.setColor(QPalette::Button, QColor(53, 53, 53));
+    darkPalette.setColor(QPalette::ButtonText, Qt::white);
+    darkPalette.setColor(QPalette::BrightText, Qt::red);
+    darkPalette.setColor(QPalette::Link, QColor(42, 130, 218));
+    darkPalette.setColor(QPalette::Highlight, QColor(42, 130, 218));
+    darkPalette.setColor(QPalette::HighlightedText, Qt::black);
+
+    // Устанавливаем данную палитру
+    qApp->setPalette(darkPalette);
+
+    //нужно перекрасить график в темный
+    ui->widget->setBackground(QBrush(QColor(25, 25, 25)));
+    SetPlotTheme(QColor(Qt::gray));
 }
 

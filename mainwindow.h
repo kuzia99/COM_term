@@ -43,6 +43,10 @@ private slots:
     void changeColor();
     void sendNextRequest();
 
+    void on_pushButton_4_clicked();
+
+    void on_pushButton_3_clicked();
+
 private:
     Ui::MainWindow *ui;
     QSerialPort *serial;
@@ -56,6 +60,7 @@ private:
     void UpdateCOMList();
     void SetPortSettings();
     void IncrementParamCounter();
+    void SetPlotTheme(QColor color);
 
     QVector<double> x,y;
 
